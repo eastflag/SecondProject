@@ -7,9 +7,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.eastflag.secondproject.fragment.Handler1Fragment;
+import com.eastflag.secondproject.fragment.Handler2Fragment;
 import com.eastflag.secondproject.fragment.MainFragment;
 
 public class MainActivity extends Activity {
@@ -41,6 +44,28 @@ public class MainActivity extends Activity {
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(this, R.layout.drawer_list_item, mMenuList); //Control
         mDrawerList.setAdapter(adapter); //ListView에 어댑터연결
+
+        //ListView 아이템 클릭 처리
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch(position) {
+                    case 0:
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, new Handler1Fragment())
+                                .addToBackStack(null) //기존프래그먼트(메인)를 스택영역에 저장.
+                                .commit();
+                        break;
+                    case 1:
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, new Handler2Fragment())
+                                .addToBackStack(null) //기존프래그먼트(메인)를 스택영역에 저장.
+                                .commit();
+                        break;
+                }
+                mDrawerLayout.closeDrawer(mDrawerList);
+            }
+        });
 
         //메뉴버튼 클릭시 슬라이딩 메뉴를 토글글
        findViewById(R.id.ivTitle).setOnClickListener(new View.OnClickListener() {
