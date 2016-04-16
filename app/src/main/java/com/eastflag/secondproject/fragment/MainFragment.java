@@ -43,4 +43,11 @@ public class MainFragment extends Fragment {
                 .addToBackStack(null) //기존프래그먼트(메인)를 스택영역에 저장.
                 .commit();
     }
+
+    @OnClick(R.id.button201) void click3() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, new Image1Fragment())
+                .addToBackStack(null) //기존프래그먼트(메인)를 스택영역에 저장.
+                .commit();
+    }
 }
