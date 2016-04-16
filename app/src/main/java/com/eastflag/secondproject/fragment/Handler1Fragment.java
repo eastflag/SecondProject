@@ -23,11 +23,15 @@ import butterknife.OnClick;
 public class Handler1Fragment extends Fragment {
     public static final int MSG_TIMER = 0;
     public static final int MSG_ACTIONBAR = 1;
+    public static final int MSG_DISPLAY =2;
     public static final String STR = "안녕하세요. 홍길동입니다.";
     private int mCount;
+    private int mLength;
     @Bind(R.id.tvDisplay) TextView tvDisplay;
+    @Bind(R.id.tvMsg) TextView tvMsg;
 
     private MyThread mThread;
+
 
     public Handler1Fragment() {
     }
@@ -66,6 +70,12 @@ public class Handler1Fragment extends Fragment {
         //3. 쓰레드 종료 : run 메서드가 실행이 끝나면 종료
         mThread.setmIsRunning(false);
     }
+    @OnClick(R.id.msgStart)
+    public void msgStart() {
+        //0.3초 간격으로 메시지 출력
+        ++mLength;
+        mHandler.sendEmptyMessageDelayed(MSG_DISPLAY, 300);
+    }
 
     Handler mHandler = new Handler(){
         @Override
@@ -77,6 +87,14 @@ public class Handler1Fragment extends Fragment {
                     break;
                 case MSG_ACTIONBAR:
                     getActivity().getActionBar().hide();
+                    break;
+                case MSG_DISPLAY:
+                    tvMsg.setText(STR.substring(0, mLength)); //(start, end) start <= x < end
+
+                    ++mLength;
+                    if (mLength <= STR.length()) {
+                        mHandler.sendEmptyMessageDelayed(MSG_DISPLAY, 300);
+                    }
                     break;
             }
         }
