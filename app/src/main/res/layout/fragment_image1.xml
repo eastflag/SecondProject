@@ -11,6 +11,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="get Image(Aquery)"
+        android:id="@+id/btnImg2" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="send to Server"
         android:id="@+id/btnSend" />
     <ImageView

@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
 import com.eastflag.secondproject.R;
 
 import java.io.IOException;
@@ -32,6 +35,7 @@ public class Image1Fragment extends Fragment {
     @Bind(R.id.ivImg)
     ImageView ivImg;
     private ProgressDialog mProgressDialog;
+    private AQuery mAq;
 
     public Image1Fragment() {
     }
@@ -41,6 +45,7 @@ public class Image1Fragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image1, container, false);
         ButterKnife.bind(this, view);
+        mAq = new AQuery(view);
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setTitle("Wait");
@@ -58,6 +63,21 @@ public class Image1Fragment extends Fragment {
             ivImg.setImageBitmap(bitmap);
         }
     };
+
+    @OnClick(R.id.btnImg2)
+    public void OnClick2() {
+        //AQuery 로 이미지 가져오기
+        //mAq.id(R.id.ivImg).image(IMG_URL).progress(mProgressDialog);
+        mAq.ajax(IMG_URL, InputStream.class, new AjaxCallback<InputStream>(){
+            @Override
+            public void callback(String url, InputStream object, AjaxStatus status) {
+                mProgressDialog.hide();
+                Bitmap bitmap = BitmapFactory.decodeStream(object);
+                ivImg.setImageBitmap(bitmap);
+            }
+        });
+        mProgressDialog.show();
+    }
 
     @OnClick(R.id.btnImg)
     public void OnClick() {
