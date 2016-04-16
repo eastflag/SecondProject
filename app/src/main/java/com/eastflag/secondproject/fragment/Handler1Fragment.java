@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,8 +21,12 @@ import butterknife.OnClick;
  * A simple {@link Fragment} subclass.
  */
 public class Handler1Fragment extends Fragment {
+    public static final int MSG_TIMER = 0;
+    public static final int MSG_ACTIONBAR = 1;
+    public static final String STR = "안녕하세요. 홍길동입니다.";
     private int mCount;
     @Bind(R.id.tvDisplay) TextView tvDisplay;
+
     private MyThread mThread;
 
     public Handler1Fragment() {
@@ -32,11 +37,26 @@ public class Handler1Fragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_handler1, container, false);
         ButterKnife.bind(this, view);
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    //액션바 보여주기
+                    getActivity().getActionBar().show();
+                    //3초후에 액션바 사라지게 하기
+                    mHandler.removeMessages(MSG_ACTIONBAR);
+                    mHandler.sendEmptyMessageDelayed(MSG_ACTIONBAR, 3000);
+                }
+                return true; //이벤트를 직접 처리하고 버블링시키지 않겠다.
+            }
+        });
+
         return view;
     }
 
     @OnClick(R.id.btnStart)
-    public void btnStart() {
+    public void onClick(View v) {
         //2. 쓰레드 시작
         mThread = new MyThread();
         mThread.start();
@@ -51,9 +71,12 @@ public class Handler1Fragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             switch(msg.what) {
-                case 0:
+                case MSG_TIMER:
                     //화면에 mCount dispay
                     tvDisplay.setText(String.valueOf(mCount));
+                    break;
+                case MSG_ACTIONBAR:
+                    getActivity().getActionBar().hide();
                     break;
             }
         }
@@ -72,7 +95,7 @@ public class Handler1Fragment extends Fragment {
                 }
                 ++mCount;
 
-                mHandler.sendEmptyMessage(0);
+                mHandler.sendEmptyMessage(MSG_TIMER);
             }
         }
         public void setmIsRunning(boolean isRunning) {

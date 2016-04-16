@@ -33,4 +33,10 @@
         android:layout_gravity="center_horizontal"
         android:text="start"
         android:id="@+id/msgStart" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/tvMsg" />
 </LinearLayout>

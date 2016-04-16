@@ -27,6 +27,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getActionBar().hide();
+
         //getActionBar().hide();
         //메인 프래그먼트 삽입
         //프래그먼트 관리자를 이용해서 add, remove, replace 등의 트랜잭션 작업을 수행
