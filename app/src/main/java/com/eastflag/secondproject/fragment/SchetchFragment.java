@@ -20,6 +20,7 @@ import com.eastflag.secondproject.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +28,9 @@ import butterknife.OnClick;
 public class SchetchFragment extends Fragment {
     @Bind(R.id.container) LinearLayout container;
     @Bind(R.id.tvPenSize) TextView tvPenSize;
+    @Bind(R.id.tvPenColor) TextView tvPenColor;
     private int mProgress = 5; //메인화면의 펜사이즈 값
+    private int mColor = Color.BLACK; // 메인화면의 색깔
 
     public SchetchFragment() {
         // Required empty public constructor
@@ -40,6 +43,7 @@ public class SchetchFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         tvPenSize.setText(String.valueOf(mProgress));
+        tvPenColor.setBackgroundColor(mColor);
 
         //커스텀뷰를 동적으로 레이아웃에 추가
         //1) 인스턴스 생성
@@ -96,6 +100,24 @@ public class SchetchFragment extends Fragment {
                     }
                 })
                 .show();
+    }
+
+    @OnClick(R.id.btnPenColor) void btnPenColor() {
+        AmbilWarnaDialog dialog = new AmbilWarnaDialog(getActivity(), mColor,
+                new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+
+            }
+
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int color) {
+                mColor = color;
+                tvPenColor.setBackgroundColor(mColor);
+            }
+        });
+
+        dialog.show();
     }
 
     class MyView extends View {
