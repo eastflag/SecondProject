@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.util.XmlDom;
 import com.eastflag.secondproject.R;
+import com.eastflag.secondproject.adaptor.BookAdaptor;
 import com.eastflag.secondproject.domain.BookVO;
 
 import java.util.ArrayList;
@@ -30,11 +32,13 @@ import butterknife.OnClick;
  */
 public class BookFragment extends Fragment {
 
-    private static final String BOOK_URL = "https://openapi.naver.com/v1/search/book.xml?query=%s";
+    private static final String BOOK_URL = "https://openapi.naver.com/v1/search/book.xml?query=%s&display=20";
 
     private AQuery mAq;
     private ArrayList<BookVO> mBookList = new ArrayList<BookVO>();
+    BookAdaptor mAdaptor;
     @Bind(R.id.etBook) EditText etBook;
+    @Bind(R.id.listBook) ListView listBook;
 
     public BookFragment() {
         // Required empty public constructor
@@ -46,6 +50,11 @@ public class BookFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_book, container, false);
         ButterKnife.bind(this, view);
         mAq = new AQuery(view);
+
+        //3.3 리스트뷰와 어댑터 연결
+        mAdaptor = new BookAdaptor(getActivity(), mBookList);
+        listBook.setAdapter(mAdaptor);
+
         return view;
     }
 
@@ -79,6 +88,9 @@ public class BookFragment extends Fragment {
                     book.setPrice(item.tag("price").text());
                     mBookList.add(book);
                }
+
+                //변경된 모델 데이터를 리스트 뷰에게 알려줘서 뷰를 갱신
+                mAdaptor.notifyDataSetChanged();
             }
         }.header("X-Naver-Client-Id", "7aWy98Ywds8IV1NEXUAL")
                 .header("X-Naver-Client-Secret", "fa1vHElxst"));
