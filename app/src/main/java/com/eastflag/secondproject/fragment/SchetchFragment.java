@@ -8,7 +8,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -32,6 +34,8 @@ public class SchetchFragment extends Fragment {
     private int mProgress = 5; //메인화면의 펜사이즈 값
     private int mColor = Color.BLACK; // 메인화면의 색깔
 
+    //1. 터치시에 터치 정보를 객체로 저장
+    //2. 저장된 객체로 부터 값을 꺼내서 커스텀뷰에 그리기
     public SchetchFragment() {
         // Required empty public constructor
     }
@@ -53,6 +57,17 @@ public class SchetchFragment extends Fragment {
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         //3) 부모뷰에 붙이기
         container.addView(myView, params);
+
+        //커스텀뷰에 터치 리스너 구현
+        myView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("LDK", "type: " + event.getAction() +
+                        ", x: " + event.getX() +
+                        ", y: " + event.getY());
+                return true; //false일경우 다운이벤트만 받고 아래로 넘겨준다.
+            }
+        });
 
         return view;
     }
