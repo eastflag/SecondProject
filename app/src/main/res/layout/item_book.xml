@@ -47,14 +47,15 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Large Text"
-                    android:id="@+id/tvTitle" />
+                    android:id="@+id/tvTitle"
+                    android:singleLine="true" android:ellipsize="end"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Small Text"
-                    android:id="@+id/tvDescription" />
+                    android:id="@+id/tvPrice" />
             </LinearLayout>
 
             <TextView
@@ -63,7 +64,8 @@
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Small Text"
-                android:id="@+id/tvPrice" />
+                android:id="@+id/tvDescription"
+                android:singleLine="true" android:ellipsize="end"/>
         </LinearLayout>
 
     </LinearLayout>
