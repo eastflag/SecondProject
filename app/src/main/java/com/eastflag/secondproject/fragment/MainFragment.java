@@ -57,4 +57,11 @@ public class MainFragment extends Fragment {
                 .addToBackStack(null) //기존프래그먼트(메인)를 스택영역에 저장.
                 .commit();
     }
+
+    @OnClick(R.id.button401) void click401() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, new SchetchFragment())
+                .addToBackStack(null) //기존프래그먼트(메인)를 스택영역에 저장.
+                .commit();
+    }
 }

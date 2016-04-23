@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <Button
+            android:id="@+id/btnPenSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PenSize" />
+        <TextView
+            android:id="@+id/tvPenSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5" />
+        <Button
+            android:id="@+id/btnPenColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PenColor" />
+        <TextView
+            android:id="@+id/tvPenColor"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="#FF000000" />
+    </LinearLayout>
+</LinearLayout>
