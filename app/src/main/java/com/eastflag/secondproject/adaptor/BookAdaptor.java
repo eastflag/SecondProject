@@ -43,19 +43,25 @@ public class BookAdaptor extends BaseAdapter {
     //두번째 파라메터 convertView는 리스트뷰가 재활용하기 위한 항목
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view;
+        ViewHolder holder;
         if(convertView == null) { //리스트뷰를 최초에 생성할때
-            view = View.inflate(mContext, R.layout.item_book, null);
+            convertView = View.inflate(mContext, R.layout.item_book, null);
+            holder = new ViewHolder();
+            holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+            convertView.setTag(holder);
         } else { //스크롤로 인해 더이상 사용되지 않는 뷰를 리스트뷰가 담아서 준다.
-            view = convertView;
+            convertView = convertView;
+            holder = (ViewHolder) convertView.getTag();
         }
-
-        TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle); //리소스 사용량이 많다.
-        tvTitle.setText(mBookList.get(position).getTitle());
 
         //그래서 findviewById 매번 하지 않고 ViewHolder 기법으로 저장했다가 재사용
         //=>ViewHolder 패턴
+        holder.tvTitle.setText(mBookList.get(position).getTitle());
 
-        return view;
+        return convertView;
+    }
+
+    class ViewHolder {
+        TextView tvTitle;
     }
 }
