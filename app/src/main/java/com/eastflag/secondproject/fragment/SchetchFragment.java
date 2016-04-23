@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.eastflag.secondproject.R;
@@ -54,11 +55,27 @@ public class SchetchFragment extends Fragment {
 
     @OnClick(R.id.btnPenSize)
     void btnPenSize() {
-        //1. 메인의 값(mProgress)을 읽어서 대화창의 seekBar와 텍스트뷰에 표현하기
-        //2. 시크바 리스너 구현하기
-        //3. ok버튼 클릭시 메인에 값 반영하기
-
         View view = View.inflate(getActivity(), R.layout.popup_pensize, null);
+        //1. 메인의 값(mProgress)을 읽어서 대화창의 seekBar와 텍스트뷰에 표현하기
+        final SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBar1);
+        final TextView popupPenSize = (TextView) view.findViewById(R.id.popupPenSize);
+        seekBar.setProgress(mProgress);
+        popupPenSize.setText(String.valueOf(mProgress));
+
+        //2. 시크바 리스너 구현하기
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                popupPenSize.setText(String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("펜사이즈")
@@ -67,7 +84,9 @@ public class SchetchFragment extends Fragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        //3. ok버튼 클릭시 메인에 값 반영하기
+                        mProgress = seekBar.getProgress();
+                        tvPenSize.setText(String.valueOf(mProgress));
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
