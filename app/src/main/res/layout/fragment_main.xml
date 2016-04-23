@@ -20,4 +20,9 @@
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="이미지가져오기2"
         android:id="@+id/button202" />
+
+    <Button
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="네이버 책검색 API"
+        android:id="@+id/button301" />
 </LinearLayout>

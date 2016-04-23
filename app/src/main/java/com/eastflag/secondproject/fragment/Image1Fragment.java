@@ -3,10 +3,12 @@ package com.eastflag.secondproject.fragment;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +19,16 @@ import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.eastflag.secondproject.R;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -78,6 +85,26 @@ public class Image1Fragment extends Fragment {
         });
         mProgressDialog.show();
     }
+
+    @OnClick(R.id.btnSend) void sendImg() {
+        //서버에 이미지를 multi-part 프로토콜로 업로드
+        String url = "http://www.javabrain.kr:8080/image/upload";
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Bitmap bitmap = ((BitmapDrawable)ivImg.getDrawable()).getBitmap();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+        byte[] byteArray = stream.toByteArray();
+        params.put("file1", byteArray);
+
+        mAq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
+            public void callback(String url, JSONObject object, AjaxStatus status) {
+                Log.d("LDK", object.toString());
+            }
+        });
+    }
+
 
     @OnClick(R.id.btnImg)
     public void OnClick() {
