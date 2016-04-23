@@ -7,6 +7,24 @@ public class BookVO {
     private String title;
     private String author;
     private String imgUrl;
+    private String description;
+    private String price;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
     public String getAuthor() {
         return author;

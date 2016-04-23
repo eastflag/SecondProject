@@ -15,7 +15,9 @@ import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.androidquery.util.XmlDom;
 import com.eastflag.secondproject.R;
+import com.eastflag.secondproject.domain.BookVO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class BookFragment extends Fragment {
     private static final String BOOK_URL = "https://openapi.naver.com/v1/search/book.xml?query=%s";
 
     private AQuery mAq;
+    private ArrayList<BookVO> mBookList = new ArrayList<BookVO>();
     @Bind(R.id.etBook) EditText etBook;
 
     public BookFragment() {
@@ -62,9 +65,19 @@ public class BookFragment extends Fragment {
                 List<XmlDom> itemList =object.tags("item");
                 for(XmlDom item : itemList) {
                     //title 노드를 리턴
-                    XmlDom itemNode = item.tag("title");
-                    String strItem = itemNode.text(); //텍스트노드의 텍스트를 가져옴.
-                    Log.d("LDK", "title: " + strItem);
+                    XmlDom titleNode = item.tag("title");
+                    String strTitle = titleNode.text(); //텍스트노드의 텍스트를 가져옴.
+
+                    String strAuthor = item.tag("author").text();
+                    String strImg = item.tag("image").text();
+
+                    BookVO book = new BookVO();
+                    book.setTitle(strTitle);
+                    book.setAuthor(strAuthor);
+                    book.setImgUrl(strImg);
+                    book.setDescription(item.tag("description").text());
+                    book.setPrice(item.tag("price").text());
+                    mBookList.add(book);
                }
             }
         }.header("X-Naver-Client-Id", "7aWy98Ywds8IV1NEXUAL")
