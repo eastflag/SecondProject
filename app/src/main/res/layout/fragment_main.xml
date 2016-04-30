@@ -29,4 +29,8 @@
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:text="스케치앱"
         android:id="@+id/button401" />
+    <Button
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="지역검색앱"
+        android:id="@+id/button501" />
 </LinearLayout>
