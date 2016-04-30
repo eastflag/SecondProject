@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -18,6 +19,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.eastflag.secondproject.R;
+import com.eastflag.secondproject.domain.VertexVO;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,6 +37,7 @@ public class SchetchFragment extends Fragment {
     @Bind(R.id.tvPenColor) TextView tvPenColor;
     private int mProgress = 5; //메인화면의 펜사이즈 값
     private int mColor = Color.BLACK; // 메인화면의 색깔
+    private ArrayList<VertexVO> mPointList = new ArrayList<VertexVO>();
 
     //1. 터치시에 터치 정보를 객체로 저장
     //2. 저장된 객체로 부터 값을 꺼내서 커스텀뷰에 그리기
@@ -51,7 +56,7 @@ public class SchetchFragment extends Fragment {
 
         //커스텀뷰를 동적으로 레이아웃에 추가
         //1) 인스턴스 생성
-        MyView myView = new MyView(getActivity());
+        final MyView myView = new MyView(getActivity());
         //2) 뷰의 속성, 배치 속성 설정
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -65,6 +70,16 @@ public class SchetchFragment extends Fragment {
                 Log.d("LDK", "type: " + event.getAction() +
                         ", x: " + event.getX() +
                         ", y: " + event.getY());
+                VertexVO vertex = new VertexVO();
+                vertex.setX(event.getX());
+                vertex.setY(event.getY());
+                vertex.setType(event.getAction()); //0:down, 2:move, 1:up
+                vertex.setPenSize(mProgress);
+                vertex.setPenColor(mColor);
+                mPointList.add(vertex);
+
+                //myView의 onDraw를 호출해준다.
+                myView.invalidate();
                 return true; //false일경우 다운이벤트만 받고 아래로 넘겨준다.
             }
         });
@@ -136,15 +151,31 @@ public class SchetchFragment extends Fragment {
     }
 
     class MyView extends View {
+        private Paint mPaint;
+
         public MyView(Context context) {
             super(context);
+            mPaint = new Paint();
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
             //백그라운드를 회색으로 칠하기
             canvas.drawColor(Color.LTGRAY);
-            //객체정보를 가져와서 여기에서 그림을 그린다.
+
+            //객체정보를 가져와서 여기에서 그림을 그린다
+            //점과 점 사이를 drawline으로 그린다. => 베지어곡선, spline
+            for(int i = 0; i < mPointList.size() ; i++) {
+                VertexVO vertex = mPointList.get(i);
+                if (vertex.getType() == MotionEvent.ACTION_MOVE) {
+                    //그 이전 점에서 현재 점까지 그리기
+                    VertexVO preVertex = mPointList.get(i - 1);
+                    mPaint.setColor(vertex.getPenColor());
+                    mPaint.setStrokeWidth(vertex.getPenSize());
+                    canvas.drawLine(preVertex.getX(), preVertex.getY(),
+                            vertex.getX(), vertex.getY(), mPaint);
+                }
+            }
 
             super.onDraw(canvas);
         }
