@@ -4,11 +4,15 @@ package com.eastflag.secondproject.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,6 +25,10 @@ import android.widget.TextView;
 import com.eastflag.secondproject.R;
 import com.eastflag.secondproject.domain.VertexVO;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -38,6 +46,7 @@ public class SchetchFragment extends Fragment {
     private int mProgress = 5; //메인화면의 펜사이즈 값
     private int mColor = Color.BLACK; // 메인화면의 색깔
     private ArrayList<VertexVO> mPointList = new ArrayList<VertexVO>();
+    private MyView mMyView;
 
     //1. 터치시에 터치 정보를 객체로 저장
     //2. 저장된 객체로 부터 값을 꺼내서 커스텀뷰에 그리기
@@ -56,15 +65,15 @@ public class SchetchFragment extends Fragment {
 
         //커스텀뷰를 동적으로 레이아웃에 추가
         //1) 인스턴스 생성
-        final MyView myView = new MyView(getActivity());
+        mMyView = new MyView(getActivity());
         //2) 뷰의 속성, 배치 속성 설정
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         //3) 부모뷰에 붙이기
-        container.addView(myView, params);
+        container.addView(mMyView, params);
 
         //커스텀뷰에 터치 리스너 구현
-        myView.setOnTouchListener(new View.OnTouchListener() {
+        mMyView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d("LDK", "type: " + event.getAction() +
@@ -79,7 +88,7 @@ public class SchetchFragment extends Fragment {
                 mPointList.add(vertex);
 
                 //myView의 onDraw를 호출해준다.
-                myView.invalidate();
+                mMyView.invalidate();
                 return true; //false일경우 다운이벤트만 받고 아래로 넘겨준다.
             }
         });
@@ -106,6 +115,7 @@ public class SchetchFragment extends Fragment {
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
@@ -150,12 +160,48 @@ public class SchetchFragment extends Fragment {
         dialog.show();
     }
 
+    @OnClick(R.id.ivShare) void ivShare() {
+        //커스텀뷰를 bitmap 저장
+        mMyView.buildDrawingCache();
+        Bitmap mBitmap = mMyView.getDrawingCache();
+
+        //Bitmap을 물리적인 경로의 jpg로 저장
+        FileOutputStream fo = null;
+        File f = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath() + "/capture.jpg");
+        try {
+            fo = new FileOutputStream(f);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 80, fo);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if(fo != null) {
+                try {
+                    fo.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        //인텐트로 브로드캐스팅하기
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        Uri uri = Uri.fromFile(f);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(intent);
+
+    }
+
     class MyView extends View {
         private Paint mPaint;
 
         public MyView(Context context) {
             super(context);
             mPaint = new Paint();
+            mPaint.setAntiAlias(true);
+            mPaint.setStrokeCap(Paint.Cap.ROUND);
         }
 
         @Override
